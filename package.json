@@ -1,0 +1,19 @@
+{
+  "name": "fazt-apptask",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel ./index.html",
+    "parcel:p": "parcel build ./index.html"
+  },
+  "author": "AZ",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/preset-typescript": "^7.9.0",
+    "parcel-bundler": "^1.12.4",
+    "typescript": "^3.8.3"
+  }
+}
