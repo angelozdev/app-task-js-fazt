@@ -4,16 +4,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "parcel ./index.html",
-    "parcel:p": "parcel build ./index.html"
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
   },
   "author": "AZ",
   "license": "MIT",
   "devDependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.9.0",
-    "@babel/preset-typescript": "^7.9.0",
+    "@babel/cli": "^7.10.5",
+    "@babel/core": "^7.11.1",
+    "@babel/preset-env": "^7.11.0",
+    "@babel/preset-typescript": "^7.10.4",
     "parcel-bundler": "^1.12.4",
-    "typescript": "^3.8.3"
-  }
+    "typescript": "^3.9.7"
+  },
+  "dependencies": {}
 }

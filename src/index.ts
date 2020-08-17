@@ -1,13 +1,13 @@
 interface ITask{
-    title: string, 
-    description: string
+    title: string | undefined,
+    description: string | undefined
 }
 
 class Tasks{
-    $description: HTMLTextAreaElement;
-    $form: HTMLFormElement;
-    $tasksView: HTMLDivElement;
-    $title: HTMLInputElement;
+    $description: HTMLTextAreaElement | null;
+    $form: HTMLFormElement | null;
+    $tasksView: HTMLDivElement | null;
+    $title: HTMLInputElement | null;
 
     constructor(){
         this.$description = document.querySelector( '#description-js' );
@@ -27,7 +27,7 @@ class Tasks{
     </div>`
         return template;
     }
-    
+
 
     private saveLocalStorage( task: ITask ): void{
         if(!localStorage.getItem( 'tasks' )){
@@ -35,7 +35,7 @@ class Tasks{
             tasks.push( task )
             localStorage.setItem( 'tasks', JSON.stringify( tasks ) )
         }else{
-            const tasks: [ITask] = JSON.parse( localStorage.getItem( 'tasks' ) )
+            const tasks: [ITask] = JSON.parse(localStorage.getItem("tasks") || "[]");
             tasks.push( task )
             localStorage.setItem( 'tasks', JSON.stringify( tasks ) )
         }
@@ -44,8 +44,8 @@ class Tasks{
 
     addTask( event : Event ): void{
         event.preventDefault();
-        const descriptionValue = this.$description.value;
-        const titleValue = this.$title.value;
+        const descriptionValue = this.$description?.value;
+        const titleValue = this.$title?.value;
         const isVoid: boolean = descriptionValue !== '' && titleValue !== '';
 
         if( isVoid ){
@@ -56,22 +56,23 @@ class Tasks{
             }
 
             this.saveLocalStorage( task )
-            
+
             const divElement = document.createElement( 'div' );
             divElement.classList.add( 'card', 'mb-3' );
             divElement.innerHTML = this.getTemplate( task )
-            
-            this.$tasksView.prepend( divElement )
 
-            this.$form.reset()
+            this.$tasksView?.prepend( divElement )
+
+            this.$form?.reset()
         }else{
             alert('Necesitas agregar datos de la tarea!')
         }
     }
 
     getTasksLocalStorage(): void{
-        const tasks: [ITask] = JSON.parse( localStorage.getItem( 'tasks' ) );
+        const tasks: [ITask] = JSON.parse( localStorage.getItem( 'tasks' ) || "[]");
         if( tasks.length ){
+            if(!this.$tasksView) {throw new Error('Error')}
             this.$tasksView.innerHTML = '';
             for ( const task of tasks ) {
                 const divElement = document.createElement( 'div' )
@@ -84,34 +85,34 @@ class Tasks{
 
     addEvents(): void{
         //El evento submit va en el formulario
-        this.$form.addEventListener( 'submit', () => this.addTask( event ) );
-        this.$tasksView.addEventListener('click', () => this.deleteTask( event ) )
-        
-    } 
+        this.$form?.addEventListener( 'submit', (event) => this.addTask( event ) );
+        this.$tasksView?.addEventListener('click', (event) => this.deleteTask( event ) )
 
-    deleteTask( {target} ): void{
-        const isTask = target.classList.contains('deleteTask-js');
+    }
+
+    deleteTask( { target }: any ): void{
+        const isTask = target?.classList.contains('deleteTask-js');
         const template = `<div class="card mb-3"><div class="card-body"><h2 class="card-title">Lorem, ipsum dolor.</h2><p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab modi deserunt magnam. Perspiciatis quas in laboriosam iure aliquid pariatur possimus?</p><button class="btn btn-danger btn-sm deleteTask-js">Eliminar</button></div></div><div class="card mb-3"><div class="card-body"><h2 class="card-title">Lorem, ipsum dolor.</h2><p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab modi deserunt magnam. Perspiciatis quas in laboriosam iure aliquid pariatur possimus?</p><button class="btn btn-danger btn-sm deleteTask-js">Eliminar</button></div></div>`
         if( isTask ){
-            const title: string = target.parentNode.childNodes[1].innerText; 
-            this.$tasksView.removeChild( target.parentNode.parentNode ) 
-            this.deleteLocalStorage( title )       
+            const title: string = target.parentNode.childNodes[1].innerText;
+            this.$tasksView?.removeChild( target.parentNode.parentNode )
+            this.deleteLocalStorage( title )
         }
 
-        if( this.$tasksView.innerHTML === '' ){
+        if( this.$tasksView?.innerHTML === '' ){
             this.$tasksView.innerHTML = template;
         }
     }
 
     deleteLocalStorage( title: string ){
-        const tasks: [ITask] = JSON.parse( localStorage.getItem( 'tasks' ) );
-        
+        const tasks: [ITask] = JSON.parse( localStorage.getItem( 'tasks' ) || "[]");
+
         for (let i = 0; i < tasks.length; i++) {
             if(tasks[i].title == title){
                 tasks.splice(i, 1)
-            }     
+            }
         }
-        
+
         localStorage.setItem('tasks', JSON.stringify(tasks))
     }
 }
